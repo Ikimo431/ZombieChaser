@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TPCC : MonoBehaviour
@@ -9,6 +10,8 @@ public class TPCC : MonoBehaviour
     private float rotation;
     private CharacterController characterController;
     public Animator animator;
+
+    public Transform lookTarget;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -36,5 +39,13 @@ public class TPCC : MonoBehaviour
         characterController.SimpleMove(movement);
         
         animator.SetFloat("Speed", speed);
+    }
+
+    
+    //adding look at position
+    private void OnAnimatorIK()
+    {
+        animator.SetLookAtPosition(lookTarget.position);
+        animator.SetLookAtWeight(1,0,1,0);
     }
 }
