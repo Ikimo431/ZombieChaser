@@ -11,11 +11,15 @@ public class ZombieController : MonoBehaviour
     private NavMeshAgent agent;
     private float speed = 0;
     public float chaseRadius = 20f;
+    public float attackRadius = 2f;
 
     private Animator animator;
+    
 
     private bool wandering;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private bool attacking;
+    private bool dead;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -26,12 +30,18 @@ public class ZombieController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player)
+        if (player && !dead)
         {
-            if(Vector3.Distance(player.position, transform.position) <= chaseRadius){
+            float distToPlayer = Vector3.Distance(player.position, transform.position);
+            if (distToPlayer <= chaseRadius)
+            {
                 agent.SetDestination(player.position);
-                UpdateSpeed(1f);
+                UpdateSpeed(.85f);
                 wandering = false;
+                if (distToPlayer <= attackRadius && !attacking)
+                {
+                    StartCoroutine(Attack());
+                }
             }
             else
             {
@@ -40,9 +50,9 @@ public class ZombieController : MonoBehaviour
                 {
                     StartCoroutine(Wander());
                 }
-                
             }
         }
+        else {UpdateSpeed(0f);}
     }
 
    /* private void OnTriggerEnter(Collider other)
@@ -73,5 +83,32 @@ public class ZombieController : MonoBehaviour
         agent.speed = newSpeed;
         animator.SetFloat("Speed", newSpeed);
         speed = newSpeed;
+    }
+
+   
+
+    IEnumerator Attack()
+    {
+        animator.SetBool("Attacking", true);
+        attacking = true;
+        yield return new WaitForSeconds(2.1f);
+        animator.SetBool("Attacking", false);
+        attacking = false;
+    }
+
+    public void Die()
+    {
+        dead = true;
+        UpdateSpeed(0f);
+        animator.SetBool("Dead", true);
+        animator.SetBool("Attacking", false);
+        agent.enabled = false;
+        
+
+    }
+
+    public bool IsDead()
+    {
+        return dead;
     }
 }

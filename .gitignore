@@ -71,3 +71,9 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Assets/Models/*
+/Assets/LowPolyNature
+/Assets/Fantasy Skybox FREE
+
+#Builds
+/WindowsBuild/*
+/WebBuild/*
